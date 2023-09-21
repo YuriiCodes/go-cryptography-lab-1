@@ -11,6 +11,7 @@ import (
 	"crypto-lab-1/task3"
 	"crypto-lab-1/task4"
 	"crypto-lab-1/task5"
+	"crypto-lab-1/task7"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -425,6 +426,59 @@ func main() {
 		},
 	}
 
+	MillerRabinInputN := widget.NewEntry()
+	MillerRabinInputK := widget.NewEntry()
+
+	MillerRabinResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	MillerRabinForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "n:", Widget: MillerRabinInputN},
+			{Text: "k:", Widget: MillerRabinInputK},
+			{Text: "Result", Widget: MillerRabinResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+			if MillerRabinInputN.Text == "" || MillerRabinInputK.Text == "" {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse each entry to big.Int and then pass them to task3.Jacobi()
+			// and then display the result in a label
+
+			n := new(big.Int)
+			// parse n
+			n, ok := n.SetString(MillerRabinInputN.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse k
+			k, err := strconv.Atoi(MillerRabinInputK.Text)
+			if err != nil {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			isPrime, err := task7.MillerRabin(n, k)
+			if err != nil {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", err.Error())), myWindow)
+				return
+			}
+			if isPrime {
+				MillerRabinResultLabel.SetText("Prime")
+			} else {
+				MillerRabinResultLabel.SetText("Composite")
+			}
+		},
+	}
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Task 1",
 			container.NewVBox(
@@ -471,10 +525,17 @@ func main() {
 			),
 		),
 
+		container.NewTabItem("Task 7",
+			container.NewVBox(
+				widget.NewLabel("Miller Rabin"),
+				MillerRabinForm,
+			),
+		),
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)
 
 	myWindow.SetContent(tabs)
 	myWindow.ShowAndRun()
+
 }

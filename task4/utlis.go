@@ -2,13 +2,9 @@ package task4
 
 import (
 	"math/big"
-	"math/rand"
 )
 
 func PollardRho(n *big.Int) *big.Int {
-	// Ініціалізуємо генератор випадкових чисел
-	rand.Seed(42) // Зафіксований seed для відтворюваності
-
 	// Ініціалізуємо змінні x, y і d
 	x := big.NewInt(2)
 	y := big.NewInt(2)

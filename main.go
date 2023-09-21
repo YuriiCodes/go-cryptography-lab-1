@@ -9,6 +9,7 @@ import (
 	"crypto-lab-1/task1"
 	"crypto-lab-1/task2"
 	"crypto-lab-1/task3"
+	"crypto-lab-1/task4"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -267,6 +268,47 @@ func main() {
 		},
 	}
 
+	PollardRhoInputN := widget.NewEntry()
+	PollardRhoResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	PollardRhoForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "n:", Widget: PollardRhoInputN},
+			{Text: "Result", Widget: PollardRhoResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+
+			if (PollardRhoInputN.Text == "") {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+			if (PollardRhoInputN.Text == "0") {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Zero input")), myWindow)
+				return
+			}
+
+			// parse each entry to big.Int and then pass them to task3.Jacobi()
+			// and then display the result in a label
+
+			n := new(big.Int)
+
+			// parse n
+			n, ok := n.SetString(PollardRhoInputN.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			result := task4.PollardRho(n)
+
+			PollardRhoResultLabel.SetText(result.String())
+		},
+	}
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Task 1",
 			container.NewVBox(
@@ -289,6 +331,13 @@ func main() {
 				widget.NewSeparator(),
 				widget.NewLabel("Jacobi symbol (a/n)"),
 				JacobiForm,
+			),
+		),
+
+		container.NewTabItem("Task 4",
+			container.NewVBox(
+				widget.NewLabel("Pollard Rho"),
+				PollardRhoForm,
 			),
 		),
 	)

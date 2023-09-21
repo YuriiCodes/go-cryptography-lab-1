@@ -14,6 +14,6 @@ func View() {
 
 	jacobi := big.NewInt(17)
 	jacobi.Mod(jacobi, b)
-	jacRes := jacobiSymbol(jacobi, b)
+	jacRes := JacobiSymbol(jacobi, b)
 	fmt.Printf("Символ Якобі (%v/%v) = %v\n", jacobi, b, jacRes)
 }

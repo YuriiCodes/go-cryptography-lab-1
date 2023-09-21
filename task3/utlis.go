@@ -5,7 +5,7 @@ import (
 )
 
 // Ця функція обчислює символ Якобі (a/b).
-func jacobiSymbol(a, b *big.Int) int {
+func JacobiSymbol(a, b *big.Int) int {
 	if b.Cmp(big.NewInt(1)) == 0 {
 		return 1
 	}
@@ -15,9 +15,9 @@ func jacobiSymbol(a, b *big.Int) int {
 	if a.Cmp(big.NewInt(2)) == 0 || a.Cmp(big.NewInt(3)) == 0 {
 		r := new(big.Int).Mod(b, big.NewInt(8))
 		if r.Cmp(big.NewInt(1)) == 0 || r.Cmp(big.NewInt(7)) == 0 {
-			return jacobiSymbol(b, a)
+			return JacobiSymbol(b, a)
 		} else if r.Cmp(big.NewInt(3)) == 0 || r.Cmp(big.NewInt(5)) == 0 {
-			return -jacobiSymbol(b, a)
+			return -JacobiSymbol(b, a)
 		}
 	} else if a.Cmp(big.NewInt(1)) == 0 {
 		return 1
@@ -28,18 +28,18 @@ func jacobiSymbol(a, b *big.Int) int {
 	if a.Cmp(big.NewInt(2)) == 0 || a.Cmp(big.NewInt(3)) == 0 {
 		r := new(big.Int).Mod(b, big.NewInt(8))
 		if r.Cmp(big.NewInt(1)) == 0 || r.Cmp(big.NewInt(7)) == 0 {
-			return jacobiSymbol(b, a)
+			return JacobiSymbol(b, a)
 		} else if r.Cmp(big.NewInt(3)) == 0 || r.Cmp(big.NewInt(5)) == 0 {
-			return -jacobiSymbol(b, a)
+			return -JacobiSymbol(b, a)
 		}
 	}
 	if a.Bit(0) == 0 {
-		return jacobiSymbol(big.NewInt(2), b) * jacobiSymbol(a.Div(a, big.NewInt(2)), b)
+		return JacobiSymbol(big.NewInt(2), b) * JacobiSymbol(a.Div(a, big.NewInt(2)), b)
 	}
 	if a.Cmp(big.NewInt(1)) == 0 {
 		return 1
 	}
-	return jacobiSymbol(b.Mod(b, a), a) * jacobiSymbol(a, b)
+	return JacobiSymbol(b.Mod(b, a), a) * JacobiSymbol(a, b)
 }
 
 func Legendre(a *big.Int, p *big.Int) *big.Int {

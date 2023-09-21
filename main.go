@@ -8,6 +8,7 @@ import (
 
 	"crypto-lab-1/task1"
 	"crypto-lab-1/task2"
+	"crypto-lab-1/task3"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -17,7 +18,7 @@ import (
 
 func main() {
 	myApp := app.New()
-	myWindow := myApp.NewWindow("TabContainer Widget")
+	myWindow := myApp.NewWindow("Yurii's Lab")
 	myWindow.Resize(fyne.NewSize(800, 600))
 
 	eulerPhiInput := widget.NewEntry()
@@ -187,6 +188,85 @@ func main() {
 		},
 	}
 
+	LegendreAInput := widget.NewEntry()
+	LegendrePInput := widget.NewEntry()
+	LegendreResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	LegendreForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "a:", Widget: LegendreAInput},
+			{Text: "p:", Widget: LegendrePInput},
+			{Text: "Result", Widget: LegendreResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+			// parse each entry to big.Int and then pass them to task3.Legendre()
+			// and then display the result in a label
+
+			a := new(big.Int)
+
+			// parse a
+			a, ok := a.SetString(LegendreAInput.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse p
+			p, ok := new(big.Int).SetString(LegendrePInput.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			result := task3.Legendre(a, p)
+			LegendreResultLabel.SetText("The result is: " + result.String())
+		},
+	}
+
+	JacobiInputA := widget.NewEntry()
+	JacobiInputN := widget.NewEntry()
+	JacobiResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	JacobiForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "a:", Widget: JacobiInputA},
+			{Text: "n:", Widget: JacobiInputN},
+			{Text: "Result", Widget: JacobiResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+			// parse each entry to big.Int and then pass them to task3.Jacobi()
+			// and then display the result in a label
+
+			a := new(big.Int)
+
+			// parse a
+			a, ok := a.SetString(JacobiInputA.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse n
+			n, ok := new(big.Int).SetString(JacobiInputN.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			result := task3.JacobiSymbol(a, n)
+
+			stringResult := strconv.Itoa(result)
+
+			JacobiResultLabel.SetText(stringResult)
+		},
+	}
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Task 1",
 			container.NewVBox(
@@ -200,6 +280,15 @@ func main() {
 		container.NewTabItem("Task 2",
 			container.NewVBox(
 				EqForm,
+			),
+		),
+		container.NewTabItem("Task 3",
+			container.NewVBox(
+				widget.NewLabel("Legendre symbol (a/p)"),
+				LegendreForm,
+				widget.NewSeparator(),
+				widget.NewLabel("Jacobi symbol (a/n)"),
+				JacobiForm,
 			),
 		),
 	)

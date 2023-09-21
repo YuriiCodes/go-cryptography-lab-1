@@ -2,7 +2,7 @@ package task5
 
 import "math/big"
 
-func BigStepLittleStep(base, target, modulus *big.Int) *big.Int {
+func BabyStepGiantStep(base, target, modulus *big.Int) *big.Int {
 	// Визначаємо межу для великого кроку
 	m := new(big.Int).Sqrt(modulus)
 	m.Add(m, big.NewInt(1))

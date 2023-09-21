@@ -10,7 +10,7 @@ func View() {
 	target := big.NewInt(10)  // Значення, для якого шукаємо дискретний логарифм
 	modulus := big.NewInt(13) // Модуль поля
 
-	result := BigStepLittleStep(base, target, modulus)
+	result := BabyStepGiantStep(base, target, modulus)
 	if result != nil {
 		fmt.Printf("Дискретний логарифм для %s за основою %s в полі %s: %s\n", target.String(), base.String(), modulus.String(), result.String())
 	} else {

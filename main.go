@@ -10,6 +10,7 @@ import (
 	"crypto-lab-1/task2"
 	"crypto-lab-1/task3"
 	"crypto-lab-1/task4"
+	"crypto-lab-1/task5"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -278,12 +279,12 @@ func main() {
 		SubmitText: "Calculate",
 		OnSubmit: func() {
 
-			if (PollardRhoInputN.Text == "") {
+			if PollardRhoInputN.Text == "" {
 				dialog.ShowError(
 					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
 				return
 			}
-			if (PollardRhoInputN.Text == "0") {
+			if PollardRhoInputN.Text == "0" {
 				dialog.ShowError(
 					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Zero input")), myWindow)
 				return
@@ -306,6 +307,69 @@ func main() {
 			result := task4.PollardRho(n)
 
 			PollardRhoResultLabel.SetText(result.String())
+		},
+	}
+
+	BabyStepGiantStepBaseInput := widget.NewEntry()
+	BabyStepGiantStepTargetInput := widget.NewEntry()
+	BabyStepGiantStepModInput := widget.NewEntry()
+	BabyStepGiantStepResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	BabyStepGiantStepForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "Base:", Widget: BabyStepGiantStepBaseInput},
+			{Text: "Target:", Widget: BabyStepGiantStepTargetInput},
+			{Text: "Mod:", Widget: BabyStepGiantStepModInput},
+			{Text: "Result", Widget: BabyStepGiantStepResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+
+			if BabyStepGiantStepBaseInput.Text == "" || BabyStepGiantStepTargetInput.Text == "" || BabyStepGiantStepModInput.Text == "" {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+			if BabyStepGiantStepBaseInput.Text == "0" || BabyStepGiantStepTargetInput.Text == "0" || BabyStepGiantStepModInput.Text == "0" {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Zero input")), myWindow)
+				return
+			}
+
+			// parse each entry to big.Int and then pass them to task3.Jacobi()
+			// and then display the result in a label
+
+			base := new(big.Int)
+			target := new(big.Int)
+			mod := new(big.Int)
+
+			// parse base
+			base, ok := base.SetString(BabyStepGiantStepBaseInput.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse target
+			target, ok = target.SetString(BabyStepGiantStepTargetInput.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse mod
+			mod, ok = mod.SetString(BabyStepGiantStepModInput.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			result := task5.BabyStepGiantStep(base, target, mod)
+
+			BabyStepGiantStepResultLabel.SetText(result.String())
 		},
 	}
 
@@ -338,6 +402,13 @@ func main() {
 			container.NewVBox(
 				widget.NewLabel("Pollard Rho"),
 				PollardRhoForm,
+			),
+		),
+
+		container.NewTabItem("Task 5",
+			container.NewVBox(
+				widget.NewLabel("Baby Step Giant Step"),
+				BabyStepGiantStepForm,
 			),
 		),
 	)

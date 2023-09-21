@@ -11,6 +11,7 @@ import (
 	"crypto-lab-1/task3"
 	"crypto-lab-1/task4"
 	"crypto-lab-1/task5"
+	"crypto-lab-1/task6"
 	"crypto-lab-1/task7"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -421,8 +422,12 @@ func main() {
 			}
 
 			// calculate the result
-			result := p.String()
-			CipolloResultLabel.SetText(result)
+			root1, root2, ok := task6.Cipolla(*n, *p)
+			if !ok {
+				CipolloResultLabel.SetText("No solution")
+				return
+			}
+			CipolloResultLabel.SetText(fmt.Sprintf("Root1: %s\nRoot2: %s", root1.String(), root2.String()))
 		},
 	}
 

@@ -1,10 +1,11 @@
-package main
+package task6
 
 import (
+	"fmt"
 	"math/big"
 )
 
-func Cipollo(n, p big.Int) (R1, R2 big.Int, ok bool) {
+func Cipolla(n, p big.Int) (R1, R2 big.Int, ok bool) {
 	if big.Jacobi(&n, &p) != 1 {
 		return
 	}
@@ -37,4 +38,23 @@ func Cipollo(n, p big.Int) (R1, R2 big.Int, ok bool) {
 	}
 	R2.Sub(&p, &r.x)
 	return r.x, R2, true
+}
+
+func main() {
+	var n, p big.Int
+	n.SetInt64(665165880)
+	p.SetInt64(1000000007)
+	R1, R2, ok := Cipolla(n, p)
+	fmt.Println(&R1, &R2, ok)
+
+	n.SetInt64(881398088036)
+	p.SetInt64(1000000000039)
+	R1, R2, ok = Cipolla(n, p)
+	fmt.Println(&R1, &R2, ok)
+
+	n.SetString("34035243914635549601583369544560650254325084643201", 10)
+	p.SetString("100000000000000000000000000000000000000000000000151", 10)
+	R1, R2, ok = Cipolla(n, p)
+	fmt.Println(&R1)
+	fmt.Println(&R2)
 }

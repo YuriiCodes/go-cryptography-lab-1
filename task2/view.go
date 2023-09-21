@@ -26,7 +26,7 @@ func View() {
 		{eq3x, eq3m},
 	}
 
-	x := solveCRT(congruences)
+	x := SolveCRT(congruences)
 	fmt.Printf("Розв'язок системи: x = %v\n", x)
 
 }

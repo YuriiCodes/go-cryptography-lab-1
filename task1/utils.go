@@ -1,5 +1,10 @@
 package task1
 
+import (
+	"strconv"
+	"strings"
+)
+
 // Функція для обчислення функції Ейлера для числа n
 func EulerPhi(n int) int {
 	result := n
@@ -62,4 +67,24 @@ func FindLCM(numbers []int) int {
 		result = lcm(result, numbers[i])
 	}
 	return result
+}
+
+// a func that returns an error and []int:
+// e.g. input is  "1, 2, 3" => []int{1, 2, 3}, nil
+// e.g. input is  "4,5,6" => []int{4, 5, 6}, nil
+func ParseIntArray(input string) ([]int, error) {
+	var result []int
+	for _, s := range strings.Split(input, ",") {
+		s = strings.TrimSpace(s)
+		if s == "" {
+			continue
+		}
+		n, err := strconv.Atoi(s)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, n)
+	}
+	return result, nil
+
 }

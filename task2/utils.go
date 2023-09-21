@@ -10,7 +10,7 @@ func modInverse(a, m *big.Int) *big.Int {
 }
 
 // Функція для знаходження x за китайською теоремою про лишки
-func solveCRT(congruences [][2]*big.Int) *big.Int {
+func SolveCRT(congruences [][2]*big.Int) *big.Int {
 	n := len(congruences)
 	M := new(big.Int)
 	result := new(big.Int)

@@ -373,6 +373,58 @@ func main() {
 		},
 	}
 
+	CipolloInputN := widget.NewEntry()
+	CipolloInputP := widget.NewEntry()
+
+	CipolloResultLabel := widget.NewLabel("") // Create an empty label to display the result.
+	CipolloForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "n:", Widget: CipolloInputN},
+			{Text: "p:", Widget: CipolloInputP},
+			{Text: "Result", Widget: CipolloResultLabel},
+		},
+		SubmitText: "Calculate",
+		OnSubmit: func() {
+
+			if CipolloInputN.Text == "" || CipolloInputP.Text == "" {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+			if CipolloInputN.Text == "0" || CipolloInputP.Text == "0" {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Zero input")), myWindow)
+				return
+			}
+
+			// parse each entry to big.Int and then pass them to task3.Jacobi()
+			// and then display the result in a label
+
+			n := new(big.Int)
+			p := new(big.Int)
+
+			// parse n
+			n, ok := n.SetString(CipolloInputN.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// parse p
+			p, ok = p.SetString(CipolloInputP.Text, 10)
+			if !ok {
+				dialog.ShowError(
+					errors.New(fmt.Sprintf("Invalid integer input: \n%s", "Empty input")), myWindow)
+				return
+			}
+
+			// calculate the result
+			result := p.String()
+			CipolloResultLabel.SetText(result)
+		},
+	}
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Task 1",
 			container.NewVBox(
@@ -411,6 +463,14 @@ func main() {
 				BabyStepGiantStepForm,
 			),
 		),
+
+		container.NewTabItem("Task 6",
+			container.NewVBox(
+				widget.NewLabel("Cipollo"),
+				CipolloForm,
+			),
+		),
+
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)

@@ -13,6 +13,7 @@ import (
 	"crypto-lab-1/task5"
 	"crypto-lab-1/task6"
 	"crypto-lab-1/task7"
+	"crypto-lab-1/task8"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -484,6 +485,121 @@ func main() {
 		},
 	}
 
+	// Key Generation Section
+	pInput := widget.NewEntry()
+	qInput := widget.NewEntry()
+
+	nLabel := widget.NewLabel("n:")
+	eLabel := widget.NewLabel("e:")
+	dLabel := widget.NewLabel("d:")
+
+	generateKeysBtn := widget.NewButton("Generate Keys", func() {
+		p, ok := new(big.Int).SetString(pInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid p"), myWindow)
+			return
+		}
+
+		q, ok := new(big.Int).SetString(qInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid q"), myWindow)
+			return
+		}
+
+		n, e, d := task8.GenerateKeys(p, q)
+		nLabel.SetText("n: " + n.String())
+		eLabel.SetText("e: " + e.String())
+		dLabel.SetText("d: " + d.String())
+	})
+
+	keyGenForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "p:", Widget: pInput},
+			{Text: "q:", Widget: qInput},
+			{Widget: container.NewVBox(nLabel, eLabel, dLabel)},
+		},
+		SubmitText: "",
+	}
+	keyGenBox := container.NewVBox(widget.NewLabel("Key Generation"), keyGenForm, generateKeysBtn)
+
+	// Encryption Section
+	messageInput := widget.NewEntry()
+	eInput := widget.NewEntry()
+	nInput := widget.NewEntry()
+	encryptedLabel := widget.NewLabel("Encrypted: ")
+
+	encryptBtn := widget.NewButton("Encrypt", func() {
+		m, ok := new(big.Int).SetString(messageInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid Message"), myWindow)
+			return
+		}
+
+		e, ok := new(big.Int).SetString(eInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid e"), myWindow)
+			return
+		}
+
+		n, ok := new(big.Int).SetString(nInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid n"), myWindow)
+			return
+		}
+
+		c := task8.Encrypt(m, e, n)
+		encryptedLabel.SetText("Encrypted: " + c.String())
+	})
+
+	encryptForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "Message:", Widget: messageInput},
+			{Text: "e:", Widget: eInput},
+			{Text: "n:", Widget: nInput},
+		},
+		SubmitText: "",
+	}
+	encryptBox := container.NewVBox(widget.NewLabel("Encryption"), encryptForm, encryptBtn, encryptedLabel)
+
+	// Decryption Section
+	ciphertextInput := widget.NewEntry()
+	dInput := widget.NewEntry()
+	nDecInput := widget.NewEntry()
+	decryptedLabel := widget.NewLabel("Decrypted: ")
+
+	decryptBtn := widget.NewButton("Decrypt", func() {
+		c, ok := new(big.Int).SetString(ciphertextInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid Ciphertext"), myWindow)
+			return
+		}
+
+		d, ok := new(big.Int).SetString(dInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid d"), myWindow)
+			return
+		}
+
+		n, ok := new(big.Int).SetString(nDecInput.Text, 10)
+		if !ok {
+			dialog.ShowError(errors.New("Invalid n"), myWindow)
+			return
+		}
+
+		m := task8.Decrypt(c, d, n)
+		decryptedLabel.SetText("Decrypted: " + m.String())
+	})
+
+	decryptForm := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "Ciphertext:", Widget: ciphertextInput},
+			{Text: "d:", Widget: dInput},
+			{Text: "n:", Widget: nDecInput},
+		},
+		SubmitText: "",
+	}
+	decryptBox := container.NewVBox(widget.NewLabel("Decryption"), decryptForm, decryptBtn, decryptedLabel)
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Task 1",
 			container.NewVBox(
@@ -534,6 +650,15 @@ func main() {
 			container.NewVBox(
 				widget.NewLabel("Miller Rabin"),
 				MillerRabinForm,
+			),
+		),
+		container.NewTabItem("Task 8",
+			container.NewVBox(
+				keyGenBox,
+				widget.NewSeparator(),
+				encryptBox,
+				widget.NewSeparator(),
+				decryptBox,
 			),
 		),
 	)

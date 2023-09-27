@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"net/url"
 	"strconv"
 
 	"crypto-lab-1/task1"
@@ -14,6 +15,7 @@ import (
 	"crypto-lab-1/task6"
 	"crypto-lab-1/task7"
 	"crypto-lab-1/task8"
+	"crypto-lab-1/task9"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -24,6 +26,16 @@ import (
 func main() {
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Yurii's Lab")
+	link, err := url.Parse("https://github.com/YuriiCodes")
+	task5.View()
+	if err != nil {
+		panic(err)
+	}
+
+	docsLink, err := url.Parse("https://yuriipidlinsyi.notion.site/1-4bfd906399124fe3825281cc617d59a0?pvs=4")
+	if err != nil {
+		panic(err)
+	}
 	myWindow.Resize(fyne.NewSize(800, 600))
 
 	eulerPhiInput := widget.NewEntry()
@@ -600,7 +612,16 @@ func main() {
 	}
 	decryptBox := container.NewVBox(widget.NewLabel("Decryption"), decryptForm, decryptBtn, decryptedLabel)
 
+	// ===
 	tabs := container.NewAppTabs(
+		container.NewTabItem("Info", container.NewVBox(
+			widget.NewLabel("Cryptography Lab 1"),
+			// add HyperLink here with text "Made by Yurii Pidlisnyi", and a link to "https://github.com/YuriiCodes"
+			widget.NewHyperlink("Made by Yurii Pidlisnyi", link),
+
+			widget.NewSeparator(),
+			widget.NewHyperlink("Docs For the Lab", docsLink),
+		)),
 		container.NewTabItem("Task 1",
 			container.NewVBox(
 				eulerPhiForm,
@@ -659,6 +680,38 @@ func main() {
 				encryptBox,
 				widget.NewSeparator(),
 				decryptBox,
+			),
+		),
+		container.NewTabItem("Task 9",
+			container.NewVBox(
+				widget.NewLabel("El Gamal Curve"),
+				widget.NewButton("Demonstrate", func() {
+					//alert ("please see the console"):
+					dialog.ShowInformation("Demonstration", "Please see the console", myWindow)
+
+					// Generate public and private keys
+					pubKey, privKey, err := task9.GenerateKeys(2048)
+					if err != nil {
+						fmt.Println("Error generating keys:", err)
+						return
+					}
+
+					// The message to be encrypted
+					message := big.NewInt(123456)
+
+					fmt.Println("Original Message :", message)
+
+					// Encrypt the message
+					c1, c2 := pubKey.Encrypt(message)
+
+					fmt.Println("Encrypted Message C1:", c1)
+					fmt.Println("Encrypted Message C2:", c2)
+
+					// Decrypt the message
+					decryptedMessage := privKey.Decrypt(c1, c2)
+
+					fmt.Println("Decrypted Message  :", decryptedMessage)
+				}),
 			),
 		),
 	)
